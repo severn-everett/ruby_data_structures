@@ -40,7 +40,7 @@ class LinkedList
   
   def remove (index = nil)
     if (index.nil?)
-      val = @last_node.val
+      val = @last_node&.val
       if @root_node == @last_node
         @root_node = nil
       else
@@ -96,6 +96,16 @@ class LinkedList
       block.call(current_node.val)
       current_node = current_node.next_node
     end
+  end
+  
+  def empty?
+    @size == 0
+  end
+  
+  def clear
+    @root_node = nil
+    @last_node = nil
+    @size = 0
   end
   
   class Node
