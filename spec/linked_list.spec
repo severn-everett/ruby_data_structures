@@ -42,7 +42,7 @@ describe LinkedList do
     end
   end
   
-  describe "#Renewal" do
+  describe "#Removal" do
     before :each do
       @linked_list = LinkedList.new
       @linked_list.add("ONE")

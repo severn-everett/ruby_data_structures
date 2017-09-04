@@ -3,6 +3,8 @@ require_relative "linked_list"
 class LinkedMap
   include Enumerable
   
+  EntryPair = Struct.new(:key, :value)
+  
   attr_reader :size
 
   def initialize (hash_num=997)
@@ -15,16 +17,28 @@ class LinkedMap
   end
   
   def []= (key, value)
-    if !key.nil?
+    entry_list = get_entry_list(key)
+    entry_pair = entry_list.find{|ep| ep.key.eql?(key)}
+    if entry_pair.nil?
+      entry_list.add(EntryPair.new(key, value))
     else
-      raise ArgumentError, "Key must not be nil"
+      entry_pair.value = value
     end
+    @size += 1
   end
   
   def [] (key)
-    if !key.nil?
+    get_entry_list(key).find{|ep| ep.key.eql?(key)}&.value
+  end
+  
+  def delete (key)
+    if !empty?
+      entry_list = get_entry_list(key)
+      entry_index = entry_list.find_index{|ep| ep.key.eql?(key)}
+      @size -= 1
+      entry_list.remove(entry_index).value
     else
-      raise ArgumentError, "Key must not be nil"
+      nil
     end
   end
   
@@ -43,19 +57,30 @@ class LinkedMap
   
   def values
     @entries.inject([]) do |values_list, entry_list|
-      entry_list.each { |entry| values_list << entry.key }
+      entry_list.each { |entry| values_list << entry.value }
       values_list
     end
   end
   
   def has_key? (key)
-    if !key.nil?
-    else
-      raise ArgumentError, "Key must not be nil!"
-    end
+    get_entry_list(key).find{|ep| ep.key.any?(key)}
   end
   
   def empty?
     @size == 0
+  end
+  
+  def clear
+    @entries.each(&:clear)
+    @size = 0
+  end
+  
+  private
+  def get_entry_list (key)
+    if !key.nil?
+      @entries[key.hash.abs % @hash_num]
+    else
+      raise IndexError, "Key must not be nil!"
+    end
   end
 end
