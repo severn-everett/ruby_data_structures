@@ -70,6 +70,7 @@ describe LinkedList do
   describe "#Removal" do
     before :each do
       @linked_list = LinkedList.new
+      @linked_list.add("ZERO")
       @linked_list.add("ONE")
       @linked_list.add("TWO")
       @linked_list.add("THREE")
@@ -78,18 +79,18 @@ describe LinkedList do
     describe "#Positive" do
       it "should remove elements" do
         expect(@linked_list.remove).to eql("THREE")
-        expect(@linked_list.join(", ")).to eql("ONE, TWO")
+        expect(@linked_list.join(", ")).to eql("ZERO, ONE, TWO")
       end
       
       it "should remove elements specified by index" do
-        expect(@linked_list.remove(0)).to eql("ONE")
-        expect(@linked_list.join(", ")).to eql("TWO, THREE")
+        expect(@linked_list.remove(0)).to eql("ZERO")
+        expect(@linked_list.join(", ")).to eql("ONE, TWO, THREE")
       end
       
       it "should remove all elements based on passed-in criteria" do
         @linked_list.delete_if {|x| x.size == 3}
-        expect(@linked_list.size).to be(1)
-        expect(@linked_list.join(", ")).to eql("THREE")
+        expect(@linked_list.size).to be(2)
+        expect(@linked_list.join(", ")).to eql("ZERO, THREE")
       end
       
       it "should be able to clear the list" do

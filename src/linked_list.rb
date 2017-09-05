@@ -91,14 +91,19 @@ class LinkedList
   end
   
   def delete_if (&block)
-    index = 0
     current_node = @root_node
-    while (!current_node.nil? and index < @size) do
+    previous_node = nil
+    while (!current_node.nil?) do
       next_node = current_node.next_node
       if block.call(current_node.val)
-        remove(index)
-      else
-        index += 1
+        if previous_node.nil? # Removing the root node
+          remove(0)
+        else # Removing a non-root node manually
+          previous_node.next_node = current_node.next_node
+          @size -= 1
+        end
+      else # No deletion - set up previous node to be current node
+        previous_node = current_node
       end
       current_node = next_node
     end
