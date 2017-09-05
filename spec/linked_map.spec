@@ -40,13 +40,14 @@ describe LinkedMap do
       @linked_map[:one] = 1
       @linked_map[:two] = 2
       @linked_map[:three] = 3
+      @linked_map[:four] = 4
     end
     
     describe "#Positive" do
       it "should remove elements" do
         expect(@linked_map.delete(:two)).to eql(2)
-        expect(@linked_map.keys).to match_array([:one, :three])
-        expect(@linked_map.values).to match_array([1, 3])
+        expect(@linked_map.keys).to match_array([:one, :three, :four])
+        expect(@linked_map.values).to match_array([1, 3, 4])
       end
       
       it "should be able to clear the list" do
@@ -58,6 +59,12 @@ describe LinkedMap do
       it "should return nothing if removal is done on an empty list" do
         @linked_map.clear
         expect(@linked_map.delete(:one)).to be(nil)
+      end
+      
+      it "should be able to delete elements based on passed-in criteria" do
+        @linked_map.delete_if{|k,v| (v % 2) != 0}
+        expect(@linked_map.keys).to match_array([:two, :four])
+        expect(@linked_map.values).to match_array([2, 4])
       end
     end
     

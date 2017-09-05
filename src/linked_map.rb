@@ -42,6 +42,27 @@ class LinkedMap
     end
   end
   
+  def delete_if (&block)
+    @entries.each do |entry_list|
+      current_node = entry_list.instance_variable_get(:@root_node)
+      previous_node = nil
+      while (!current_node.nil?) do
+        next_node = current_node.next_node
+        if block.call(current_node.val.key, current_node.val.value)
+          if previous_node.nil? # Removing the root node
+            entry_list.remove(0)
+          else # Removing a non-root node manually
+            previous_node.next_node = current_node.next_node
+            @size -= 1
+          end
+        else # No deletion - set up previous node to be current node
+          previous_node = current_node
+        end
+        current_node = next_node
+      end
+    end
+  end
+  
   def each (&block)
     @entries.each do |entry_list|
       entry_list.each { |entry| block.call(entry.key, entry.value) }
