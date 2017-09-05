@@ -38,6 +38,24 @@ class LinkedList
     @size += 1
   end
   
+  def []= (index, val)
+    add(val, index)
+  end
+  
+  def get (index)
+    if (index > -1 and index < @size)
+      target_node = @root_node
+      (0...index).each {|i| target_node = target_node.next_node}
+      target_node.val
+    else
+      raise IndexError, "Index #{index} is invalid"
+    end
+  end
+  
+  def [] (index)
+    get(index)
+  end
+  
   def remove (index = nil)
     if (index.nil?)
       val = @last_node&.val
@@ -70,6 +88,20 @@ class LinkedList
     end
     @size -= 1
     val
+  end
+  
+  def delete_if (&block)
+    index = 0
+    current_node = @root_node
+    while (!current_node.nil? and index < @size) do
+      next_node = current_node.next_node
+      if block.call(current_node.val)
+        remove(index)
+      else
+        index += 1
+      end
+      current_node = next_node
+    end
   end
   
   def first
